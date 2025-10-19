@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Watch & Earn - Updated</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f0f8ff; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* --- LOGIN PAGE STYLING --- */
+  #loginPage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e6f0ff, #f0f8ff);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10; 
+    transition: opacity 0.5s ease;
+  }
+  .login-card { background: #fff; padding: 30px 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0, 123, 255, 0.2); max-width: 320px; width: 90%; }
+  .login-card h2 { color: #007bff; margin-bottom: 25px; }
+  .input-group { margin-bottom: 15px; text-align: left; }
+  .input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+  .input-group input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 10px; transition: border-color 0.3s; }
+  .input-group input:focus { border-color: #007bff; outline: none; }
+  #loginMessage { color: red; margin-top: 10px; font-size: 14px; min-height: 20px; }
+  .login-btn { width: 100%; background: linear-gradient(90deg, #007bff, #00ffff); border: none; color: #fff; padding: 12px 20px; font-size: 16px; border-radius: 30px; cursor: pointer; transition: all 0.3s ease-in-out; box-shadow: 0 5px 20px rgba(0, 123, 255, 0.4); margin-top: 10px; }
+  
+  /* --- ACTION BAR STYLING (UPDATED) --- */
+  #actionBar {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(90deg, #007bff, #00ffff);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+  }
+  
+  .app-logo { font-size: 18px; font-weight: 700; color: #fff; }
+  .app-logo i { color: #fff; margin-right: 5px; }
+
+  .profile-dp {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #007bff;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* MAIN CONTENT */
+  #mainContent {
+    flex: 1; 
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+    overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 20px;
+  }
+
+  h1 { 
+    margin-top: 20px;
+    color: #007bff; 
+    font-size: 24px; 
+    padding-bottom: 5px;
+  }
+  h1 i { margin-right: 8px; }
+  p { color: #555; font-size: 16px; margin-top: 5px; }
+  
+  .center { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding-bottom: 30px; 
+    flex: 1; 
+    min-height: 200px;
+    width: 100%;
+  }
+  
+  .page-container { 
+    width: 100%; 
+    max-width: 400px; 
+    margin-top: 20px; 
+    background: #fff; 
+    padding: 20px; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05); 
+    text-align: center;
+  }
+  .page-container h2 { text-align: center; color: #007bff; margin-bottom: 15px; }
+  
+  /* Balance & Ads Text Centering */
+  .balance-display, .ads-display {
+    font-size: 42px;
+    color: #007bff;
+    font-weight: 700;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  /* Earn Button */
+  .earn-btn { 
+    background: linear-gradient(90deg, #007bff, #00ffff); 
+    border: none; 
+    color: #fff; 
+    padding: 18px 35px; 
+    font-size: 18px; 
+    border-radius: 40px; 
+    cursor: pointer; 
+    transition: all 0.3s ease-in-out; 
+    position: relative; 
+    z-index: 2; 
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); 
+    animation: glowFlow 3s infinite alternate;
+  }
+  .earn-btn i { margin-right: 8px; }
+  @keyframes glowFlow { 
+    0% { box-shadow: 0 0 15px 5px rgba(0, 123, 255, 0.8), 0 0 30px 10px rgba(0, 255, 255, 0.3); } 
+    100% { box-shadow: 0 0 15px 5px rgba(0, 255, 255, 0.8), 0 0 30px 10px rgba(0, 123, 255, 0.3); } 
+  }
+  .earn-btn.bouncy { transform: scale(1.15); animation: none; box-shadow: 0 0 40px 15px rgba(0, 255, 255, 1); }
+  
+  /* Account Page Specific Styles */
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .profile-photo-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #007bff, #00ffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 45px;
+    color: #fff;
+    margin-bottom: 15px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  
+  .edit-icon-btn {
+    position: absolute;
+    bottom: 15px;
+    right: calc(50% - 50px);
+    background: #007bff;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+  }
+  .edit-icon-btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { font-weight: 600; color: #555; }
+  .info-value { color: #007bff; font-weight: 600; }
+  
+  /* Edit Modal Styles */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 350px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  .modal-content h3 { color: #007bff; margin-bottom: 20px; text-align: center; }
+  .modal-content .input-group { margin-bottom: 15px; text-align: left; }
+  .modal-content .input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+  .modal-content .input-group input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 10px; }
+  .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; transition: all 0.3s; }
+  .btn-save { background: linear-gradient(90deg, #007bff, #00ffff); color: #fff; }
+  .btn-cancel { background: #ddd; color: #333; }
+  
+  /* Earning Popup Styles */
+  .earning-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #007bff, #00ffff);
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 123, 255, 0.5);
+    z-index: 200;
+    text-align: center;
+    animation: popupBounce 0.5s ease;
+  }
+  @keyframes popupBounce {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+  .earning-popup h3 {
+    color: #fff;
+    font-size: 24px;
+    margin: 0 0 15px 0;
+  }
+  .earning-popup .amount {
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    margin: 15px 0;
+  }
+  .earning-popup p {
+    color: #fff;
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  .popup-done-btn {
+    background: #fff;
+    color: #007bff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .popup-done-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 150;
+  }
+  
+  /* Error Popup Styles */
+  .error-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(255, 76, 76, 0.3);
+    z-index: 200;
+    text-align: center;
+    animation: popupBounce 0.5s ease;
+    max-width: 350px;
+    width: 90%;
+  }
+  .error-popup .error-icon {
+    font-size: 60px;
+    color: #ff4c4c;
+    margin-bottom: 15px;
+  }
+  .error-popup h3 {
+    color: #ff4c4c;
+    font-size: 22px;
+    margin: 0 0 15px 0;
+  }
+  .error-popup p {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+  .error-popup .balance-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+  }
+  .error-popup .balance-info p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  .error-popup .balance-info strong {
+    color: #007bff;
+    font-size: 16px;
+  }
+  .error-close-btn {
+    background: linear-gradient(90deg, #ff4c4c, #ff1a1a);
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s;
+  }
+  .error-close-btn:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Navigation Bar */
+  .bottom-bar { 
+    display: none;
+    justify-content: space-around; 
+    background: #e6f0ff; 
+    padding: 12px 0; 
+    border-top-left-radius: 20px; 
+    border-top-right-radius: 20px; 
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1); 
+    width: 100%; 
+  }
+  .bottom-item { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    font-size: 13px; 
+    color: #444; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    padding: 5px 0;
+    transform: translateY(0);
+  }
+  .bottom-item.active { transform: translateY(-8px); }
+  .bottom-item .icon-wrapper { 
+    position: relative; 
+    width: 40px; 
+    height: 40px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-bottom: 3px; 
+    transition: color 0.3s ease; 
+  }
+  .bottom-item .icon-wrapper i { font-size: 20px; transition: transform 0.3s ease; z-index: 2; }
+  .bottom-item.active .icon-wrapper::before { 
+    content: ''; 
+    position: absolute; 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    background: linear-gradient(45deg, #007bff, #00ffff); 
+    opacity: 1; 
+    transform: scale(1); 
+    transition: transform 0.3s ease, opacity 0.3s ease; 
+  }
+  .bottom-item.active .icon-wrapper i { color: #fff; }
+  .bottom-item.active p { color: #007bff; font-weight: 600; }
+  
+  /* Mobile Responsive */
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .earn-btn { padding: 15px 30px; font-size: 16px; }
+    .balance-display, .ads-display { font-size: 36px; }
+    .bottom-item { font-size: 12px; }
+    .bottom-item .icon-wrapper { width: 35px; height: 35px; }
+    .bottom-item .icon-wrapper i { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+    
+  <div id="loginPage">
+    <div class="login-card">
+        <h2><i class="fas fa-lock"></i> Login to Earn</h2>
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="prox" required />
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="prox@123" required />
+        </div>
+        <p id="loginMessage"></p>
+        <button class="login-btn" id="loginButton"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    </div>
+  </div>
+
+  <div id="actionBar">
+      <div class="app-logo"><i class="fas fa-video"></i> Watch & Earn</div>
+      <div class="profile-dp" id="profileDP" onclick="document.querySelector('[data-page=account]').click();">
+          <i class="fas fa-user"></i>
+      </div>
+  </div>
+
+  <div id="mainContent"></div>
+
+  <div class="bottom-bar" id="navBar">
+    <div class="bottom-item active" data-page="home">
+      <div class="icon-wrapper"><i class="fas fa-home"></i></div>
+      <p>Home</p>
+    </div>
+    <div class="bottom-item" data-page="wallet">
+      <div class="icon-wrapper"><i class="fas fa-wallet"></i></div>
+      <p id="walletText">Wallet: ₹0</p>
+    </div>
+    <div class="bottom-item" data-page="ads">
+      <div class="icon-wrapper"><i class="fas fa-film"></i></div>
+      <p id="adsWatchedText">Ads: 0</p>
+    </div>
+    <div class="bottom-item" data-page="account">
+      <div class="icon-wrapper"><i class="fas fa-user-circle"></i></div>
+      <p>Account</p>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3><i class="fas fa-edit"></i> Edit Profile</h3>
+      <div class="input-group">
+        <label><i class="fas fa-user"></i> Name</label>
+        <input type="text" id="editNameInput" placeholder="Enter your name" />
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-envelope"></i> Email (Optional)</label>
+        <input type="email" id="editEmailInput" placeholder="Enter email" />
+      </div>
+      <div class="input-group">
+        <label><i class="fas fa-camera"></i> Profile Photo</label>
+        <input type="file" id="editDPInput" accept="image/*" />
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeEditModal()"><i class="fas fa-times"></i> Cancel</button>
+        <button class="btn-save" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Earning Popup -->
+  <div class="popup-overlay" id="popupOverlay"></div>
+  <div class="earning-popup" id="earningPopup">
+    <h3><i class="fas fa-check-circle"></i> Congratulations!</h3>
+    <p>You earned</p>
+    <div class="amount" id="earningAmount">₹0</div>
+    <p>from watching this ad!</p>
+    <button class="popup-done-btn" onclick="closeEarningPopup()">
+      <i class="fas fa-check"></i> Done
+    </button>
+  </div>
+
+  <!-- Error Popup for Insufficient Balance -->
+  <div class="error-popup" id="errorPopup">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <h3>Insufficient Balance!</h3>
+    <p>You don't have enough balance to withdraw.</p>
+    <div class="balance-info">
+      <p>Current Balance: <strong id="errorCurrentBalance">₹0</strong></p>
+      <p>Required Balance: <strong>₹500</strong></p>
+      <p>You need: <strong id="errorRemainingAmount">₹500</strong> more</p>
+    </div>
+    <p style="font-size: 13px; color: #999;">Please continue watching ads to earn more.</p>
+    <button class="error-close-btn" onclick="closeErrorPopup()">
+      <i class="fas fa-times"></i> Close
+    </button>
+  </div>
+
+<script>
+  // Global scope variables
+  const loginPage = document.getElementById("loginPage");
+  const loginButton = document.getElementById("loginButton");
+  const mainContent = document.getElementById("mainContent");
+  const navBar = document.getElementById("navBar");
+  const actionBar = document.getElementById("actionBar");
+  const navItems = document.querySelectorAll(".bottom-item");
+  const walletText = document.getElementById("walletText");
+  const adsWatchedText = document.getElementById("adsWatchedText");
+  const loginMessage = document.getElementById("loginMessage");
+  const profileDP = document.getElementById("profileDP");
+  const editModal = document.getElementById("editModal");
+  const earningPopup = document.getElementById("earningPopup");
+  const popupOverlay = document.getElementById("popupOverlay");
+  const earningAmount = document.getElementById("earningAmount");
+  const errorPopup = document.getElementById("errorPopup");
+  const errorCurrentBalance = document.getElementById("errorCurrentBalance");
+  const errorRemainingAmount = document.getElementById("errorRemainingAmount");
+
+  let totalAds = 0;
+  let balance = 0;
+
+  const LS_USERNAME = 'appUserName';
+  const LS_EMAIL = 'appUserEmail';
+  const LS_DP_URL = 'appDPUrl';
+  const LS_USER_NUMBER = 'appUserNumber';
+  const LS_FIRST_LOGIN = 'appFirstLogin';
+  const LS_BALANCE = 'appBalance';
+  const LS_TOTAL_ADS = 'appTotalAds';
+
+  const CORRECT_USERNAME = 'prox';
+  const CORRECT_PASSWORD = 'prox@123';
+
+  // Random earning function
+  function getRandomEarning() {
+    return (Math.random() * (6.8 - 1.2) + 1.2).toFixed(1);
+  }
+
+  // Generate Dynamic User ID based on login time
+  function generateUserID() {
+    let userNumber = localStorage.getItem(LS_USER_NUMBER);
+    
+    if (!userNumber) {
+      const timestamp = Date.now();
+      userNumber = (timestamp % 100000).toString();
+      localStorage.setItem(LS_USER_NUMBER, userNumber);
+      localStorage.setItem(LS_FIRST_LOGIN, timestamp);
+    }
+    
+    return `#${'00000'}${userNumber}`;
+  }
+
+  // Home Content
+  function getHomeContent() {
+    return `
+    <div>
+      <h1><i class="fas fa-video"></i> Watch & Earn</h1> 
+      <p>Dekho Ads, Kamao Real Paisa!</p>
+    </div>
+    <div class="center">
+      <button class="earn-btn" id="earnButtonLogic"><i class="fas fa-coins"></i> Watch Ads and Earn Money</button>
+    </div>
+  `;
+  }
+
+  // Wallet Content
+  function getWalletContent() {
+    return `
+    <div>
+        <h1><i class="fas fa-wallet"></i> Wallet Balance</h1>
+    </div>
+    <div class="page-container">
+        <h2><i class="fas fa-money-bill-wave"></i> Current Balance</h2>
+        <div class="balance-display">₹${balance.toFixed(1)}</div>
+        <p style="margin-top: 20px; color: #666;"><i class="fas fa-info-circle"></i> Minimum Withdrawal: ₹500</p>
+        <button class="earn-btn" style="padding: 12px 25px; font-size: 16px; margin-top: 15px;" onclick="handleWithdrawal()">
+          <i class="fas fa-hand-holding-usd"></i> Withdraw Now
+        </button>
+    </div>
+  `;
+  }
+
+  // Ads Content
+  function getAdsContent() {
+    return `
+    <div>
+        <h1><i class="fas fa-film"></i> Ad Watch History</h1>
+    </div>
+    <div class="page-container">
+        <h2><i class="fas fa-chart-line"></i> Total Ads Watched</h2>
+        <div class="ads-display">${totalAds}</div>
+        <p style="color: #666;"><i class="fas fa-coins"></i> You earned ₹${balance.toFixed(1)} from ads.</p>
+        <p style="margin-top: 20px; font-size: 12px; color: #aaa;"><i class="fas fa-clock"></i> Detailed watch history will appear here.</p>
+    </div>
+  `;
+  }
+
+  // Account Content
+  function getAccountContent() {
+    const savedName = localStorage.getItem(LS_USERNAME) || 'Guest User';
+    const savedEmail = localStorage.getItem(LS_EMAIL) || 'Not provided';
+    const savedDPUrl = localStorage.getItem(LS_DP_URL) || '';
+    const userId = generateUserID();
+
+    return `
+    <div>
+        <h1><i class="fas fa-user-circle"></i> My Account</h1>
+    </div>
+    <div class="page-container">
+        <div class="profile-section">
+            <div class="profile-photo-large" id="profilePhotoLarge" style="${savedDPUrl ? `background-image: url('${savedDPUrl}');` : ''}">
+                ${!savedDPUrl ? '<i class="fas fa-user"></i>' : ''}
+            </div>
+            <div class="edit-icon-btn" onclick="openEditModal()">
+                <i class="fas fa-pencil-alt"></i>
+            </div>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label"><i class="fas fa-user"></i> Name:</span>
+            
